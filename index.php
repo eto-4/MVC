@@ -3,10 +3,40 @@
  * index.php
  * 
  * Punt d'entrada principal de l'aplicació MVC.
- * Gestiona totes les rutes a través del Router i crida als controladors corresponents.
+ * Gestiona totes les rutes a través del Router, crida als controladors corresponents i fa la conexió a la bbdd.
  */
 
 require_once 'Router.php'; // Incloem la classe Router
+
+<?php
+// setup.php - se ejecuta solo la primera vez
+
+$host = 'localhost';
+$dbName = 'mi_app';
+$user = 'usuarioX';
+$pass = 'contraseñaX';
+
+try {
+    $pdo = new PDO("mysql:host=$host", $user, $pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Crear la base de datos si no existe
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
+    echo "Base de dades comprovada/creada.<br>";
+
+    // Seleccionar la base de datos
+    $pdo->exec("USE `$dbName`");
+
+    // Cargar el SQL de tablas desde tables.sql
+    $sql = file_get_contents(__DIR__ . '/tables.sql');
+    $pdo->exec($sql);
+
+    echo "Taules Creades/Modificades Èxitosament!.<br>";
+
+} catch (PDOException $e) {
+    die("Error: " . $e->getMessage());
+}
+
 
 // Instanciem el Router
 $router = new Router();
