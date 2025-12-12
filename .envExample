@@ -1,0 +1,5 @@
+# DB Info
+HOST=localhost
+DBNAME=db_Name
+USER=root
+PASS=''

@@ -1,4 +1,8 @@
 # Requisits Funcionals
+
+# COMPOSER/vendor Required
+https://getcomposer.org/download/
+
 ## 1. Estructura MVC
  - Model: Classe Tasca per gestionar les dades i la lògica de negoci
  - Vista: Plantilles PHP per a la presentació (header, footer, formularis, llistats)

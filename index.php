@@ -6,39 +6,30 @@
  * Gestiona totes les rutes a través del Router, crida als controladors corresponents i fa la conexió a la bbdd.
  */
 
-require_once 'Router.php'; // Incloem la classe Router
+// env
+require_once __DIR__ . '/vendor/autoload.php';
+use Dotenv\Dotenv;
 
-<?php
-// setup.php - se ejecuta solo la primera vez
+// Carregar variables
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-$host = 'localhost';
-$dbName = 'mi_app';
-$user = 'usuarioX';
-$pass = 'contraseñaX';
+// Accedir a les vars
+$host = $_ENV['DB_HOST'];
+$dbName = $_ENV['DB_NAME'];
+$user = $_ENV['DB_USER'];
+$pass = $_ENV['DB_PASS'];
 
-try {
-    $pdo = new PDO("mysql:host=$host", $user, $pass);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Crear la base de datos si no existe
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
-    echo "Base de dades comprovada/creada.<br>";
-
-    // Seleccionar la base de datos
-    $pdo->exec("USE `$dbName`");
-
-    // Cargar el SQL de tablas desde tables.sql
-    $sql = file_get_contents(__DIR__ . '/tables.sql');
-    $pdo->exec($sql);
-
-    echo "Taules Creades/Modificades Èxitosament!.<br>";
-
-} catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
-}
+// Imports
+require_once 'Router.php';
+require_once 'config/Database.php';
 
 
-// Instanciem el Router
+// Inicialitzar la base de dades.
+$db = new Database($host, $dbName, $user, $pass);
+$pdo = $db->getConnection();
+
+// Instancia de router.
 $router = new Router();
 
 /**

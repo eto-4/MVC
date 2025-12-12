@@ -1,13 +1,25 @@
 <?php
+/**
+ * Task.php
+ * 
+ * Classe Task per gestionar les tasques de l'aplicació.
+ * Permet crear, actualitzar i carregar tasques des de la base de dades.
+ * Utilitza PDO per a la connexió a la BBDD i JSON per emmagatzemar etiquetes.
+ */
 
 class Task
 {
+    /**
+     * @var PDO $pdo
+     * Instància de PDO per interactuar amb la base de dades
+     */
     private $pdo;
-
+    
+    // Propietats de la tasca
     public $id;
     public $title;
     public $description = '';
-    public $tags = [];
+    public $tags = []; // Array d'etiquetes
     public $cost = 0;
     public $due_date;
     public $expected_hours = 20;
@@ -21,16 +33,27 @@ class Task
     public $created_at;
     public $updated_at;
 
+    /**
+     * Constructor
+     * Inicialitza la tasca amb la connexió PDO i valors per defecte
+     * @param PDO $pdo Connexió PDO a la base de dades
+     */
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
-        // Per defecte el due_date es per 24hores mes tard.
+
+        // Per defecte, el due_date és 24 hores més tard
         $this->due_date = date('Y-m-d H:i:s', time() + 24 * 60 * 60);
+
+        // Inicialitzar timestamps
         $this->created_at = date('Y-m-d H:i:s');
         $this->updated_at = date('Y-m-d H:i:s');
     }
 
-    // Guardar nova tasca
+    /**
+     * Guardar nova tasca a la base de dades
+     * Assigna automàticament l'id generat
+     */
     public function save()
     {
         $sql = "INSERT INTO tasks (
@@ -44,6 +67,8 @@ class Task
                 )";
 
         $stmt = $this->pdo->prepare($sql);
+
+        // Executem la inserció amb els valors de la instància
         $stmt->execute([
             ':title' => $this->title,
             ':description' => $this->description,
@@ -62,15 +87,19 @@ class Task
             ':updated_at' => $this->updated_at,
         ]);
 
+        // Assignem l'id generat per la BBDD
         $this->id = $this->pdo->lastInsertId();
     }
 
-    // Actualizar la tasca existent
+    /**
+     * Actualitzar una tasca existent
+     * Assigna updated_at i, si es marca com a completada, també finished_at
+     */
     public function update()
     {
         $this->updated_at = date('Y-m-d H:i:s');
 
-        // Si es marca com a completada i no té data de finalització
+        // Si s'ha marcat com a completada i no té data de finalització
         if ($this->state === 'completed' && empty($this->finished_at)) {
             $this->finished_at = date('Y-m-d H:i:s');
         }
@@ -93,6 +122,8 @@ class Task
                 WHERE id = :id";
 
         $stmt = $this->pdo->prepare($sql);
+
+        // Executem l'actualització amb els valors de la instància
         $stmt->execute([
             ':title' => $this->title,
             ':description' => $this->description,
@@ -112,7 +143,11 @@ class Task
         ]);
     }
 
-    // Cargar una tasca per ID
+    /**
+     * Carregar una tasca existent per ID
+     * Omple totes les propietats de l'objecte amb els valors de la BBDD
+     * @param int $id ID de la tasca a carregar
+     */
     public function load($id)
     {
         $stmt = $this->pdo->prepare("SELECT * FROM tasks WHERE id = :id");
