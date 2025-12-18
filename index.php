@@ -33,12 +33,22 @@ $pass = $_ENV['DB_PASS'];
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-// Logger app
-$logger = new Logger('mvc');
+// Logger app's
+$loggerMng = new Logger('mvc');
 
-// Assignació de app al handler
-$logger->pushHandler(
-    new StreamHandler(__DIR__ . '/logs/mvc.log', Logger::ERROR)
+// Handler per a logs d'errors.
+$loggerMng->pushHandler(
+    new StreamHandler(__DIR__ . '/logs/mvcError.log', Logger::ERROR)
+);
+
+// Handler per a logs d'avisos.
+$loggerMng->pushHandler(
+    new StreamHandler(__DIR__ . '/logs/mvcWarnings.log', Logger::WARNING)
+);
+
+// Handler per a logs normals.
+$loggerMng->pushHandler(
+    new StreamHandler(__DIR__ . '/logs/mvcApp.log', Logger::INFO)
 );
 
 // ---
@@ -46,12 +56,16 @@ $logger->pushHandler(
 try {
     // INICIALITZACIÓ BD
     // ==========
-    $db = new Database($host, $dbName, $user, $pass); // Inicialitzar la base de dades.
-    $pdo = $db->getConnection();
+    // $db = new Database($host, $dbName, $user, $pass); // Inicialitzar la base de dades.
+    // $pdo = $db->getConnection();
     
     // INICIALITZACIÓ BD
     $router = new Router();
-    
+
+    $loggerMng->error('Això es un error de prova 🤡');
+    $loggerMng->warning('Això es un warning de prova 🤡');
+    $loggerMng->info('Això es un missatge informatiu');
+
     /**
      * -------------------------------
      * RUTES GET I POST DE L'APLICACIÓ
