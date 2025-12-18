@@ -1,4 +1,4 @@
-CREATE TABLE `tasks` (
+CREATE TABLE IF NOT EXISTS `tasks` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT DEFAULT '',
@@ -7,9 +7,6 @@ CREATE TABLE `tasks` (
   `due_date` DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 DAY),
   `expected_hours` INT DEFAULT 20,
   `used_hours` INT DEFAULT 0,
-  `image_url` VARCHAR(255) DEFAULT NULL,
-  `image_local_name` VARCHAR(255) DEFAULT NULL,
-  `image_cloud_public_id` VARCHAR(255) DEFAULT NULL,
   `priority` ENUM('low', 'medium', 'high') DEFAULT 'medium',
   `state` ENUM('pending', 'in-progress', 'blocked', 'completed') DEFAULT 'pending',
   `finished_at` DATETIME DEFAULT NULL,

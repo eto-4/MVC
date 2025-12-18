@@ -4,33 +4,46 @@
 https://getcomposer.org/download/
 
 ## 1. Estructura MVC
- - Model: Classe Tasca per gestionar les dades i la lògica de negoci
- - Vista: Plantilles PHP per a la presentació (header, footer, formularis, llistats)
- - Controlador: Classes HomeController i TaskController per gestionar la lògica de control
+- **Model:** Classes per gestionar les entitats i la lògica de negoci (per exemple, `Tasca`).  
+- **Vista:** Plantilles PHP per a la presentació, incloent layouts (header, footer) i vistes de formularis o llistats.  
+- **Controlador:** Classes que gestionen la lògica de control i les rutes corresponents (`HomeController`, `TaskController`).  
+
 ## 2. Sistema de Routing
- - Implementar un Router personalitzat que gestioni les rutes de l'aplicació
- - Suport per a rutes dinàmiques amb paràmetres (ex: /tasques/{id})
- - Gestió d'errors 404
- - Configuració automàtica del basePath
-## 3. Operacions CRUD per Tasques
- - CREATE: Formulari per crear noves tasques
- - READ: Llistat de totes les tasques i visualització individual
- - UPDATE: Formulari per editar tasques existents
- - DELETE: Eliminació de tasques amb confirmació
+- Router personalitzat que gestiona les rutes de l'aplicació.  
+- Suport per a rutes dinàmiques amb paràmetres (ex.: `/tasques/{id}`).  
+- Gestió d'errors 404.  
+- Configuració automàtica del basePath.  
+
+## 3. Operacions CRUD per a Tasques
+- **CREATE:** Formularis per crear noves tasques.  
+- **READ:** Llistat complet de tasques i visualització individual.  
+- **UPDATE:** Formularis per editar tasques existents.  
+- **DELETE:** Eliminació de tasques amb confirmació.  
 
 ## 4. Base de Dades
- - Connexió a MySQL utilitzant PDO
- - Implementar el patró Singleton per a la connexió
- - Taula tasques amb camps: id, nom
- - Gestió d’errors amb try - catch
+- Connexió a MySQL utilitzant PDO.  
+- Implementació del patró Singleton per a la connexió.  
+- Creació i verificació de la base de dades i de les taules de manera aïllada a l'inici de l'aplicació.  
+- Taula `tasques` amb camps: `id`, `nom`.  
+- Gestió d'errors amb try-catch i llançament d'excepcions.  
+
 ## 5. Sistema de Missatges Flash
- - Implementar una classe FlashMessages per mostrar notificacions
- - Suport per diferents tipus: success, error, warning, info
- - Integració amb Bootstrap per a l'estil
+- Classe `FlashMessages` per mostrar notificacions a l'usuari.  
+- Suport per a diferents tipus: success, error, warning, info.  
+- Integració amb Bootstrap per un estil consistent.  
+
 ## 6. Validator
- - Classe Validator amb tota la lògica per a la validació de dades tant en formularis com en paràmetres GET, i  sempre que sigui necessari
+- Classe `Validator` per a la validació de dades de formularis i paràmetres GET, garantint consistència a tota l'aplicació.  
+
+## 7. Logging i Monitoreig
+- Integració de logging centralitzat amb Monolog.  
+- Registre d'errors i excepcions en arxius de log (`logs/mvc.log`).  
+- Carpeta de logs gestionada de manera que no es pugi contingut sensible al repositori.  
+
+---
 
 # Requisits Tècnics
+
 ## Estructura de Carpetes
 /
 ├── config/
@@ -61,32 +74,43 @@ https://getcomposer.org/download/
 ├── Router.php
 └── index.php
 
-# Rutes a Implementar
- - GET / - Pàgina principal
- - GET /tasques - Llistat de tasques
- - GET /tasques/create - Formulari de creació
- - POST /tasques - Processar creació
- - GET /tasques/{id}/edit - Formulari d'edició
- - POST /tasques/{id} - Processar actualització
- - POST /tasques/{id}/delete - Eliminar tasca
+
+---
+
+# Rutes de l'Estructura
+- `GET /` - Pàgina principal  
+- `GET /tasques` - Llistat de tasques  
+- `GET /tasques/create` - Formulari de creació  
+- `POST /tasques` - Processar creació  
+- `GET /tasques/{id}/edit` - Formulari d'edició  
+- `POST /tasques/{id}` - Processar actualització  
+- `POST /tasques/{id}/delete` - Eliminar tasca  
+
+---
 
 # Interfície d'Usuari
- - Utilitzar Bootstrap 5 per a l'estil
- - Disseny responsive i modern
- - Navegació amb breadcrumbs
- - Confirmacions JavaScript per eliminacions
- - Missatges flash per a feedback d'usuari
+- Ús de Bootstrap 5 per a l'estil.  
+- Disseny responsive i modern.  
+- Navegació amb breadcrumbs.  
+- Confirmacions JavaScript per eliminacions.  
+- Missatges flash per feedback a l'usuari.  
+
+---
 
 # Aspectes de Disseny
- - Paleta de colors coherent
- - Ús d'icones Bootstrap Icons
- - Animacions CSS suaus
- - Empty states quan no hi ha dades
- - Footer fix al bottom de la pàgina
+- Paleta de colors coherent.  
+- Ús d'icones Bootstrap Icons.  
+- Animacions CSS suaus.  
+- Empty states quan no hi ha dades.  
+- Footer fix al final de la pàgina.  
+
+---
+
 # Entregables
- - Codi font complet seguint l'estructura MVC connexió Singleton a la BBDD i validació en tots els formularis. 
- - Base de dades MySQL amb la taula corresponent
- - Fitxer .htaccess configurat per al routing
- - Documentació del codi amb comentaris
- - Aplicació funcional amb totes les operacions CRUD
- - Vídeo demostratiu
+- Codi font complet seguint l'estructura MVC, connexió Singleton a la BBDD i validació en tots els formularis.  
+- Base de dades MySQL amb la taula corresponent, verificació i creació automàtica de DB i taules.  
+- Carpeta de logs amb logging d'errors i excepcions mitjançant Monolog.  
+- Fitxer `.htaccess` configurat per al routing.  
+- Documentació del codi amb comentaris clars.  
+- Aplicació funcional amb totes les operacions CRUD.  
+- Vídeo demostratiu del funcionament de l'aplicació.  
