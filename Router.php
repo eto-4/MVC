@@ -1,4 +1,5 @@
 <?php
+use Psr\Log\LoggerInterface;
 /**
  * Router.php
  * 
@@ -6,7 +7,6 @@
  * Permet definir rutes GET i POST amb controladors o funcions anònimes
  * i despatxar-les segons la URL sol·licitada pel navegador.
  */
-
 class Router
 {
     /**
@@ -21,14 +21,28 @@ class Router
      */
     private string $basePath;
 
+    private ?LoggerInterface $logger;
+
     /**
      * Constructor
      * Inicialitza el basePath automàticament segons la ubicació del script
      */
-    public function __construct()
+    public function __construct(?LoggerInterface $logger = null)
     {
         // Obtenir el camí base de l'aplicació de forma automàtica
         $this->basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');   
+        $this->logger = $logger;
+
+        $this->log('info', 'Router inicialitzat', [
+            'basePath' => $this->basePath
+        ]);
+    }
+
+    private function log(string $level, string $message, array $context = []): void
+    {
+        if ($this->logger) {
+            $this->logger->{$level}($message, $context);
+        }
     }
 
     /**
@@ -66,9 +80,13 @@ class Router
      */
     private function convertToRegex(string $pattern): string
     {
-        // Substituïm els paràmetres dinàmics per grups de captura numèrics
-        $regex = preg_replace('#\{([a-zA-Z_]+)\}#', '([0-9]+)', $pattern);
-        return "#^" . $this->basePath . $regex . "$#";
+        if ($pattern === '/') {
+            $pattern = rtrim($pattern, '/');
+        }
+        
+        $regex = preg_replace('#\{[a-zA-Z_]+\}#', '([0-9]+)', $pattern);
+    
+        return "#^" . $regex . "$#";
     }
 
     /**
@@ -80,15 +98,39 @@ class Router
         // Eliminar paràmetres GET i basePath
         $uri = parse_url($uri, PHP_URL_PATH);
 
+        if ($this->basePath !== '' && str_starts_with($uri, $this->basePath)) {
+            $uri = substr($uri, strlen($this->basePath));
+        }
+
+        $this->log('info', 'Dispatch iniciat', [
+            'request_URI' => $_SERVER['REQUEST_URI'],
+            'parsed_URI'  => $uri,
+            'method'      => $_SERVER['REQUEST_METHOD']
+        ]);
+        
+        $uri = $uri === '' ? '/' : rtrim($uri, '/');
+
         foreach ($this->routes as $route) {
 
             // Comprovar que el mètode coincideix
             if ($_SERVER['REQUEST_METHOD'] !== $route['method']) {
                 continue;
             }
+            
+            $this->log('info', 'Comprovant ruta', [
+                'method'  => $route['method'],
+                'pattern' => $route['pattern'],
+                'uri'     => $uri
+            ]);
 
             // Comprovar si la ruta coincideix amb la regex
             if (preg_match($route['pattern'], $uri, $matches)) {
+
+                $this->log('info', 'Ruta Coincident', [
+                    'pattern' => $route['pattern'],
+                    'uri'     => $uri,
+                    'params'  => $matches
+                ]);
 
                 // Eliminem el match complet
                 array_shift($matches);
@@ -111,9 +153,16 @@ class Router
                     }
 
                     require_once $controllerFile;
+                    
+                    $instance = new $controller();
+
+                    if (!method_exists($instance, $method)) {
+                        http_response_code(500);
+                        echo "Mètode $method no trobat a $controller.";
+                        exit;
+                    }
 
                     // Instanciem el controlador i cridem el mètode amb els paràmetres capturats
-                    $instance = new $controller();
                     return call_user_func_array([$instance, $method], $matches);
                 }
                 
@@ -121,11 +170,15 @@ class Router
                 return call_user_func_array($route['callback'], $matches);
             }
         }
-    
+        
+        $this->log('warning', 'Cap ruta coincideix', [
+            'uri'    => $uri,
+            'method' => $_SERVER['REQUEST_METHOD'],
+            'routes' => array_column($this->routes, 'pattern')
+        ]);
         // Si no trobem cap ruta → Error 404
         http_response_code(404);
         require "views/home/404.php";
         exit;
     } 
 }
-?>

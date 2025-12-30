@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `description` TEXT DEFAULT '',
   `tags` JSON DEFAULT '[]',
   `cost` DECIMAL(10,2) DEFAULT 0,
-  `due_date` DATETIME NOT NULL DEFAULT (CURRENT_TIMESTAMP + INTERVAL 1 DAY),
+  `due_date` DATETIME NOT NULL,
   `expected_hours` INT DEFAULT 20,
   `used_hours` INT DEFAULT 0,
   `priority` ENUM('low', 'medium', 'high') DEFAULT 'medium',

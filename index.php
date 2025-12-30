@@ -3,13 +3,12 @@
  * index.php
  * 
  * Punt d'entrada principal de l'aplicació MVC.
- * Gestiona totes les rutes a través del Router, crida als controladors (HomeController, TaskController, Database, Logger) corresponents i fa la conexió a la bbdd.
+ * Gestiona totes les rutes a través del Router, crida als controladors (HomeController, TaskController, Logger) corresponents i fa la conexió a la bbdd.
 
  */
 
 // Imports
 require_once 'Router.php';
-require_once 'config/Database.php';
 require_once __DIR__ . '/vendor/autoload.php';
 
 // ENV CONFIG
@@ -19,12 +18,6 @@ use Dotenv\Dotenv;
 // Carregar variables
 $dotenv = Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-
-// Accedir a les vars .env
-$host = $_ENV['DB_HOST'];
-$dbName = $_ENV['DB_NAME'];
-$user = $_ENV['DB_USER'];
-$pass = $_ENV['DB_PASS'];
 
 // ---
 
@@ -53,18 +46,9 @@ $loggerMng->pushHandler(
 
 // ---
 // Encapsulació d'errors al log.
-try {
+try {    
     // INICIALITZACIÓ BD
-    // ==========
-    $db = new Database($host, $dbName, $user, $pass); // Inicialitzar la base de dades.
-    $pdo = $db->getConnection();
-    
-    // INICIALITZACIÓ BD
-    $router = new Router();
-
-    // $loggerMng->error('Això es un error de prova 🤡');
-    // $loggerMng->warning('Això es un warning de prova 🤡');
-    // $loggerMng->info('Això es un missatge informatiu');
+    $router = new Router($loggerMng);
 
     /**
      * -------------------------------
@@ -94,26 +78,19 @@ try {
     $router->post('/tasques/{id}/delete', 'TaskController@delete');
     
     /**
-     * Ruta de prova amb funció anònima
-     * Serveix per comprovar que el Router captura correctament els paràmetres dinàmics
-     */
-    $router->get("/tasques/{id}", function($id) {
-        echo "Has demanat la tasca amb ID: " . $id;
-    });
-    
-    /**
      * Despatxar la ruta actual
      * Passa la URI del navegador al Router per gestionar la ruta corresponent
      */
-    $router->dispatch($_SERVER['REQUEST_URI']);
+    define('APP_ROOT', __DIR__);
+    define('BASE_PATH', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/'));
+    $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $router->dispatch($uri);
 
 }
 catch (RuntimeException $e)
 {
-    $logger->error($e->getMessage(), ['exception' => $e]);
+    $loggerMng->error($e->getMessage(), ['exception' => $e]);
 
     // Mostrar missatge amigable a l'usuari
     echo "Ha succeït un error inesperat. Si us plau intenteu-ho de nou més tard.";
 }
-
-?>

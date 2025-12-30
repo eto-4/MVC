@@ -56,11 +56,9 @@ class Task
         try {
             $sql = "INSERT INTO tasks (
                         title, description, tags, cost, due_date, expected_hours, used_hours,
-                        image_url, image_local_name, image_cloud_public_id,
                         priority, state, finished_at, created_at, updated_at
                     ) VALUES (
                         :title, :description, :tags, :cost, :due_date, :expected_hours, :used_hours,
-                        :image_url, :image_local_name, :image_cloud_public_id,
                         :priority, :state, :finished_at, :created_at, :updated_at
                     )";
     

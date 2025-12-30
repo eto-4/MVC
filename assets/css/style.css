@@ -1,0 +1,53 @@
+/* Grid y diseño inspirado en tu ejemplo Django */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1fr;
+    grid-template-areas:
+        "mTitle mTitle mTitle"
+        "title title priority"
+        "tags description description"
+        "state description description"
+        "cost due_date expected_hours"
+        "used_hours . ."
+        "actions actions actions";
+    gap: 1.2rem;
+    max-width: 900px;
+    margin: 2rem auto;
+    background: rgba(22, 27, 34, 0.92);
+    padding: 2rem;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mTitle      { grid-area: mTitle; text-align: center; font-size: 2rem; font-weight: bold; color: #58a6ffcc; text-decoration: underline;}
+.title       { grid-area: title;}
+.priority    { grid-area: priority; }
+.tags        { grid-area: tags; }
+.description { grid-area: description; }
+.state       { grid-area: state; }
+.cost        { grid-area: cost; }
+.due_date    { grid-area: due_date; }
+.expected_hours { grid-area: expected_hours; }
+.used_hours  { grid-area: used_hours; }
+.actions     { grid-area: actions; display: flex; justify-content: flex-end; gap: 12px; margin-top: 1rem; }
+
+input, select, textarea {
+    width: 100%;
+    background-color: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 10px;
+    color: #e6e6e6;
+}
+textarea { min-height: 80px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: #58a6ff; box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.25); }
+
+button.btn-primary {
+    background: linear-gradient(135deg, #238636, #2ea043);
+    border: none; color: #fff; padding: 12px 20px; border-radius: 8px; font-size: 1rem;
+}
+button.btn-outline-secondary {
+    background: transparent; border: 1px solid #30363d; color: #c9d1d9; padding: 12px 20px; border-radius: 8px;
+}
+button.btn-outline-secondary:hover { background: rgba(255,255,255,0.06); color: #fff; }
+label {color: #58a6ff; }
