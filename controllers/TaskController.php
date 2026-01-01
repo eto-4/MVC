@@ -138,9 +138,9 @@ class TaskController
         $validator = new Validator($data);
         $validator->required('title')->string('title', 3, 255);
         $validator->string('description', 0, 2000);
-        $validator->array('tags');
+        $validator->tags('tags');
         $validator->numeric('cost');
-        $validator->date('due_date', 'Y-m-d');
+        $validator->date('due_date');
         $validator->numeric('expected_hours');
         $validator->numeric('used_hours');
         $validator->enum('priority');
@@ -149,13 +149,16 @@ class TaskController
 
         if (!$validator->isValid()) {
             $errors = $validator->errors();
+            require APP_ROOT . '/views/layouts/header.php';
             require APP_ROOT . '/views/tasques/edit.php';
+            require APP_ROOT . '/views/layouts/footer.php';            
             return;
         }
 
         $task->title          = $data['title'];
         $task->description    = $data['description'];
-        $task->tags           = $data['tags'];
+        $rawTags              = $data['tags'];
+        $task->tags           = array_filter(array_map('trim', explode(',', $rawTags)));
         $task->cost           = $data['cost'];
         $task->due_date       = $data['due_date'];
         $task->expected_hours = $data['expected_hours'];

@@ -92,7 +92,7 @@ class Validator
     /**
      * Valida una data amb format estricte
      */
-    public function date(string $field, string $format = 'Y-m-d H:i:s'): self
+    public function date(string $field, string $format = 'Y-m-d\TH:i'): self
     {
         if (!isset($this->data[$field]) || $this->data[$field] === '') {
             return $this;
@@ -130,24 +130,25 @@ class Validator
     }
 
     /**
-     * Valida arrays (ex: tags[])
+     * Valida tags
      */
-    public function array(string $field): self
+    public function tags(string $field): self
     {
         if (!isset($this->data[$field])) {
             return $this;
         }
 
-        if (!is_array($this->data[$field])) {
+        if (!is_string($this->data[$field])) {
             $this->addError(
                 $field,
-                "Ha de ser una llista"
+                "Format d'etiquetes invalid"
             );
+            return $this;
         }
-
+        
         return $this;
     }
-
+    
     /**
      * Indica si la validació ha passat
      */

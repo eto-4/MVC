@@ -107,7 +107,7 @@ class Task
         $stmt->execute([':id' => $id]);
         $data = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!data) {
+        if (!$data) {
             return false;
         }
 

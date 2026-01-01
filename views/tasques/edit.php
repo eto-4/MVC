@@ -3,7 +3,7 @@
 
 // Mostrar errores si existen
 if (!empty($errors)) {
-    echo '<div class="alert alert-danger">';
+    echo '<div class="form-error">';
     foreach ($errors as $fieldErrors) {
         foreach ($fieldErrors as $error) {
             echo "<p>{$error}</p>";
@@ -12,35 +12,81 @@ if (!empty($errors)) {
     echo '</div>';
 }
 
-// Valores de la tarea actual
+// Valores previos del formulario (POST > modelo)
 $title = $_POST['title'] ?? $task->title;
 $description = $_POST['description'] ?? $task->description;
+$tags = $_POST['tags'] ?? json_encode($task->tags ?? []);
+$cost = $_POST['cost'] ?? $task->cost;
+$due_date = $_POST['due_date'] ?? $task->due_date;
+$expected_hours = $_POST['expected_hours'] ?? $task->expected_hours;
+$used_hours = $_POST['used_hours'] ?? $task->used_hours;
 $priority = $_POST['priority'] ?? $task->priority;
+$state = $_POST['state'] ?? $task->state;
 ?>
 
-<div class="container my-5">
-    <h1>Editar tasca</h1>
-    <form action="/tasques/<?= $task->id ?>" method="POST">
-        <div class="mb-3">
-            <label for="title" class="form-label">Títol</label>
-            <input type="text" class="form-control" id="title" name="title" value="<?= htmlspecialchars($title) ?>" required>
-        </div>
+<form action="<?= BASE_PATH ?>/tasques/<?= $task->id ?>" method="POST" class="form-grid">
+    <div class="mTitle">Editar tasca</div>
 
-        <div class="mb-3">
-            <label for="description" class="form-label">Descripció</label>
-            <textarea class="form-control" id="description" name="description"><?= htmlspecialchars($description) ?></textarea>
-        </div>
+    <div class="title">
+        <label>Títol</label>
+        <input type="text" name="title" value="<?= htmlspecialchars($title) ?>" required>
+    </div>
 
-        <div class="mb-3">
-            <label for="priority" class="form-label">Prioritat</label>
-            <select class="form-select" id="priority" name="priority">
-                <option value="low" <?= $priority === 'low' ? 'selected' : '' ?>>Baixa</option>
-                <option value="medium" <?= $priority === 'medium' ? 'selected' : '' ?>>Mitjana</option>
-                <option value="high" <?= $priority === 'high' ? 'selected' : '' ?>>Alta</option>
-            </select>
-        </div>
+    <div class="priority">
+        <label>Prioritat</label>
+        <select name="priority">
+            <option value="low" <?= $priority === 'low' ? 'selected' : '' ?>>Baixa</option>
+            <option value="medium" <?= $priority === 'medium' ? 'selected' : '' ?>>Mitjana</option>
+            <option value="high" <?= $priority === 'high' ? 'selected' : '' ?>>Alta</option>
+        </select>
+    </div>
 
+    <div class="tags">
+        <label>Etiquetes (tag1,tag2,tag3)</label>
+        <input type="text" name="tags" value="<?= htmlspecialchars($tags) ?>">
+    </div>
+
+    <div class="description">
+        <label>Descripció</label>
+        <textarea name="description"><?= htmlspecialchars($description) ?></textarea>
+    </div>
+
+    <div class="state">
+        <label>Estat</label>
+        <select name="state">
+            <option value="pending" <?= $state === 'pending' ? 'selected' : '' ?>>Pendent</option>
+            <option value="in-progress" <?= $state === 'in-progress' ? 'selected' : '' ?>>En progrés</option>
+            <option value="blocked" <?= $state === 'blocked' ? 'selected' : '' ?>>Bloquejada</option>
+            <option value="completed" <?= $state === 'completed' ? 'selected' : '' ?>>Completada</option>
+        </select>
+    </div>
+
+    <div class="cost">
+        <label>Cost</label>
+        <input type="number" step="0.01" name="cost" value="<?= htmlspecialchars($cost) ?>">
+    </div>
+
+    <div class="due_date">
+        <label>Data límit</label>
+        <input
+            type="datetime-local"
+            name="due_date"
+            value="<?= $due_date ? date('Y-m-d\TH:i', strtotime($due_date)) : '' ?>"
+        >
+    </div>
+
+    <div class="expected_hours">
+        <label>Hores esperades</label>
+        <input type="number" name="expected_hours" value="<?= htmlspecialchars($expected_hours) ?>">
+    </div>
+
+    <div class="used_hours">
+        <label>Hores utilitzades</label>
+        <input type="number" name="used_hours" value="<?= htmlspecialchars($used_hours) ?>">
+    </div>
+
+    <div class="actions">
         <button type="submit" class="btn btn-primary">Desar canvis</button>
-        <a href="<?= BASE_PATH ?>/tasques" class="btn btn-secondary">Cancel·lar</a>
-    </form>
-</div>
+        <a href="<?= BASE_PATH ?>/tasques" class="btn btn-outline-secondary">Cancel·lar</a>
+    </div>
+</form>

@@ -19,6 +19,10 @@ require_once APP_ROOT . '/helpers/FlashMessages.php';
                     <th>ID</th>
                     <th>Títol</th>
                     <th>Descripció</th>
+                    <th>Cost (€)</th>
+                    <th>Estat</th>
+                    <th>Progrés (hores)</th>
+                    <th>Data d'entrega</th>
                     <th>Prioritat</th>
                     <th>Accions</th>
                 </tr>
@@ -29,11 +33,15 @@ require_once APP_ROOT . '/helpers/FlashMessages.php';
                         <td><?= $task->id ?></td>
                         <td><?= htmlspecialchars($task->title) ?></td>
                         <td><?= htmlspecialchars($task->description) ?></td>
+                        <td><?= htmlspecialchars("$task->cost" . "€") ?></td>
+                        <td><?= htmlspecialchars("$task->state") ?></td>
+                        <td><?= htmlspecialchars("$task->used_hours" . "/" . "$task->expected_hours"."h") ?></td>
+                        <td><?= htmlspecialchars("$task->due_date") ?></td>
                         <td><?= ucfirst($task->priority) ?></td>
                         <td>
                             <a href="<?= BASE_PATH ?>/tasques/<?= $task->id ?>/edit" class="btn btn-primary btn-sm">Editar</a>
 
-                            <form action="/tasques/<?= $task->id ?>/delete" method="POST" style="display:inline-block" onsubmit="return confirm('Segur que vols eliminar aquesta tasca?');">
+                            <form action="<?= BASE_PATH ?>/tasques/<?= $task->id ?>/delete" method="POST" style="display:inline-block" onsubmit="return confirm('Segur que vols eliminar aquesta tasca?');">
                                 <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
                         </td>

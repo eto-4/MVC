@@ -17,7 +17,7 @@ $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
 $tags = $_POST['tags'] ?? '[]';
 $cost = $_POST['cost'] ?? 0;
-$due_date = $_POST['due_date'] ?? date('Y-m-d\TH:i');
+$due_date = $_POST['due_date'] ?? date('Y/m/d H:i:s');
 $expected_hours = $_POST['expected_hours'] ?? 20;
 $used_hours = $_POST['used_hours'] ?? 0;
 $priority = $_POST['priority'] ?? 'medium';
@@ -42,8 +42,8 @@ $state = $_POST['state'] ?? 'pending';
     </div>
 
     <div class="tags">
-        <label>Etiquetes (JSON)</label>
-        <input type="text" name="tags" value="<?= htmlspecialchars($tags) ?>">
+        <label>Etiquetes (tag1,tag2,tag3)</label>
+        <input type="text" name="tags" value="">
     </div>
 
     <div class="description">
