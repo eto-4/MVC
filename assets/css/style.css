@@ -183,16 +183,17 @@ button.btn-primary {
     font-size: 1rem;
 }
 
-button.btn-outline-secondary {
-    background: transparent;
+a.btn-outline-secondary {
+    background: rgba(218, 98, 98, 0.436);
     border: 1px solid #30363d;
     color: #c9d1d9;
     padding: 12px 20px;
     border-radius: 8px;
+    text-align: center;
 }
 
-button.btn-outline-secondary:hover {
-    background: rgba(255,255,255,0.06);
+a.btn-outline-secondary:hover {
+    background: rgba(216, 37, 37, 0.828);
     color: #fff;
 }
 
