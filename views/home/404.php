@@ -3,9 +3,13 @@
 http_response_code(404);
 ?>
 
-<div class="text-center my-5">
-    <h1 class="display-3">404</h1>
-    <h2>Pàgina no trobada</h2>
-    <p class="text-muted">Ho sentim, la pàgina que estàs buscant no existeix.</p>
-    <a href="<?= BASE_PATH ?>/" class="btn btn-primary mt-3">Tornar a l'inici</a>
+<div class="error-page">
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">Pàgina no trobada</h2>
+    <p class="error-text">
+        Ho sentim, la pàgina que estàs buscant no existeix.
+    </p>
+    <a href="<?= BASE_PATH ?>/" class="btn-primary">
+        Tornar a l'inici
+    </a>
 </div>

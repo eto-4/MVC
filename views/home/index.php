@@ -1,6 +1,12 @@
-<div class="container my-5 text-center">
-    <h1>Benvingut a la teva aplicació de tasques</h1>
-    <p>Aquí podràs crear, editar i gestionar totes les teves tasques de manera fàcil i ordenada.</p>
+<!-- views/home/index.php -->
+<div class="home-hero">
+    <h1 class="home-title">Benvingut a la teva aplicació de tasques</h1>
 
-    <a href="<?= BASE_PATH ?>/tasques" class="btn btn-primary btn-lg mt-3">Veure les meves tasques</a>
+    <p class="home-text">
+        Aquí podràs crear, editar i gestionar totes les teves tasques de manera fàcil i ordenada.
+    </p>
+
+    <a href="<?= BASE_PATH ?>/tasques" class="btn-primary btn-lg">
+        Veure les meves tasques
+    </a>
 </div>

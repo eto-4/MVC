@@ -55,7 +55,14 @@ class TaskController
         // Validacions
         $validator = new Validator($data);
         $validator->required('title')->string('title', 3, 255);
-        $validator->enum('priority'); // 'low', 'medium', 'high' segons Validator
+        $validator->string('description', 0, 2000);
+        $validator->tags('tags');
+        $validator->numeric('cost');
+        $validator->date('due_date');
+        $validator->numeric('expected_hours');
+        $validator->numeric('used_hours');
+        $validator->enum('priority');
+        $validator->enum('state');
 
         $this->logger->info('Petició de creació de tasca', [
             'post'         => $_POST,
@@ -72,10 +79,16 @@ class TaskController
         }
 
         // Creem la tasca
-        $task = new Task($this->pdo);
-        $task->title       = $data['title'];
-        $task->description = $data['description'];
-        $task->priority    = $data['priority'];
+        $task                 = new Task($this->pdo);
+        $task->title          = $data['title'];
+        $task->description    = $data['description'];
+        $task->tags           = $data['tags'];
+        $task->cost           = $data['cost'];
+        $task->due_date       = $data['due_date'];
+        $task->expected_hours = $data['expected_hours'];
+        $task->used_hours     = $data['used_hours'];
+        $task->priority       = $data['priority'];
+        $task->state          = $data['state'];
 
         $task->save();
 

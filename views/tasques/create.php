@@ -17,7 +17,7 @@ $title = $_POST['title'] ?? '';
 $description = $_POST['description'] ?? '';
 $tags = $_POST['tags'] ?? '[]';
 $cost = $_POST['cost'] ?? 0;
-$due_date = $_POST['due_date'] ?? date('Y/m/d H:i:s');
+$due_date = $_POST['due_date'] ?? date('Y-m-d\TH:i');
 $expected_hours = $_POST['expected_hours'] ?? 20;
 $used_hours = $_POST['used_hours'] ?? 0;
 $priority = $_POST['priority'] ?? 'medium';
@@ -43,7 +43,7 @@ $state = $_POST['state'] ?? 'pending';
 
     <div class="tags">
         <label>Etiquetes (tag1,tag2,tag3)</label>
-        <input type="text" name="tags" value="">
+        <input type="text" name="tags" value="<?= htmlspecialchars($tags) ?>">
     </div>
 
     <div class="description">
@@ -68,7 +68,7 @@ $state = $_POST['state'] ?? 'pending';
 
     <div class="due_date">
         <label>Data límit</label>
-        <input type="datetime-local" name="due_date" value="<?= date('Y-m-d\TH:i', strtotime($due_date)) ?>">
+        <input type="datetime-local" name="due_date" value="<?= htmlspecialchars($due_date) ?>">
     </div>
 
     <div class="expected_hours">
