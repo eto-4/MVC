@@ -13,15 +13,49 @@ if (!empty($errors)) {
 }
 
 // Valores previos del formulario (POST > modelo)
-$title = $_POST['title'] ?? $task->title;
-$description = $_POST['description'] ?? $task->description;
-$tags = $_POST['tags'] ?? json_encode($task->tags ?? []);
-$cost = $_POST['cost'] ?? $task->cost;
-$due_date = $_POST['due_date'] ?? $task->due_date;
-$expected_hours = $_POST['expected_hours'] ?? $task->expected_hours;
-$used_hours = $_POST['used_hours'] ?? $task->used_hours;
-$priority = $_POST['priority'] ?? $task->priority;
-$state = $_POST['state'] ?? $task->state;
+// Titol
+$title = $_POST['title'] 
+    ?? $task->title;
+
+// Descripcio
+$description = $_POST['description'] 
+    ?? $task->description;
+
+// Tag Array
+$tagsArray = $_POST['tags'] 
+    ?? (is_string($task->tags)
+        ? json_decode($task->tags, true)
+        : ($task->tags ?? [])
+    );
+
+// Tags
+$tags = empty($tagsArray)
+    ? ''
+    : implode(', ', $tagsArray);
+
+// Cost
+$cost = $_POST['cost'] 
+    ?? $task->cost;
+    
+// Data limit
+$due_date = $_POST['due_date'] 
+    ?? $task->due_date;
+
+// Hores esperades
+$expected_hours = $_POST['expected_hours'] 
+    ?? $task->expected_hours;
+
+// Hores fetes servir
+$used_hours = $_POST['used_hours'] 
+    ?? $task->used_hours;
+
+// prioritat
+$priority = $_POST['priority'] 
+    ?? $task->priority;
+
+// Estat
+$state = $_POST['state'] 
+    ?? $task->state;
 ?>
 
 <form action="<?= BASE_PATH ?>/tasques/<?= $task->id ?>" method="POST" class="form-grid">
@@ -43,7 +77,7 @@ $state = $_POST['state'] ?? $task->state;
 
     <div class="tags">
         <label>Etiquetes (tag1,tag2,tag3)</label>
-        <input type="text" name="tags" value="<?= htmlspecialchars($tags) ?>">
+        <input type="text" name="tags" value="<?= htmlspecialchars($tags) == '[]' ? : htmlspecialchars($tags) ?>">
     </div>
 
     <div class="description">

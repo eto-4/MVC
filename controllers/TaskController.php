@@ -114,7 +114,7 @@ class TaskController
             require APP_ROOT . '/../views/home/404.php';
             return;
         }
-
+        
         require APP_ROOT . '/views/layouts/header.php';
         require APP_ROOT . '/views/tasques/edit.php';
         require APP_ROOT . '/views/layouts/footer.php';

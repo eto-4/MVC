@@ -29,7 +29,7 @@ $state = $_POST['state'] ?? 'pending';
 
     <div class="title">
         <label>Títol</label>
-        <input type="text" name="title" value="<?= htmlspecialchars($title) ?>" required>
+        <input type="text" name="title" value="<?= htmlspecialchars($title) ?>" placeholder="Entra el teu titol aqui..." required> 
     </div>
 
     <div class="priority">
@@ -43,12 +43,12 @@ $state = $_POST['state'] ?? 'pending';
 
     <div class="tags">
         <label>Etiquetes (tag1,tag2,tag3)</label>
-        <input type="text" name="tags" value="<?= htmlspecialchars($tags) ?>">
+        <input type="text" name="tags" value="<?= htmlspecialchars($tags) == '[]' ? '' : htmlspecialchars($tags) ?>" placeholder="Entra les teves etiquetes aqui...">
     </div>
 
     <div class="description">
         <label>Descripció</label>
-        <textarea name="description"><?= htmlspecialchars($description) ?></textarea>
+        <textarea name="description" placeholder="Entra la teva descripció aqui..."><?= htmlspecialchars($description) ?></textarea>
     </div>
 
     <div class="state">
