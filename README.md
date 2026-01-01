@@ -74,6 +74,12 @@ https://getcomposer.org/download/
 ├── Router.php
 └── index.php
 
+## Comandes per que tot funcion correctament:
+1. Clonar/Descarregar el repo a un dir.
+2. Obrir la terminal insitu.
+3. Executar: ```composer install```
+4. Afegir .env al projecte amb les dades necessaries.
+5. Fi, ja pots tocar el que vulguis.
 
 ---
 

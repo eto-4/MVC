@@ -4,24 +4,30 @@
  * Sanitizer
  *
  * Classe encarregada de netejar i normalitzar dades d'entrada
- * (formularis HTML, $_POST, $_GET, etc.)
+ * provinents de formularis HTML ($_POST, $_GET, etc.).
  *
- * No valida regles de negoci, només saneja valors.
+ * No valida regles de negoci, només saneja valors per evitar
+ * codi maliciós o caràcters innecessaris.
  */
 class Sanitizer
 {
     /**
      * Neteja un array de dades (normalment $_POST)
+     *
+     * @param array $data Array de dades d'entrada
+     * @return array Array sanejat
+     *
+     * Exemple:
+     * $_POST = ['title' => ' <b>Hola</b> ', 'tags' => ['php', '<script>'] ]
+     * retorna ['title' => 'Hola', 'tags' => ['php']]
      */
     public static function clean(array $data): array
     {
-        // Dudas: que valores se mueven por aqui? dar ejemplo de que se ven en cada linea.
         $cleaned = [];
         foreach ($data as $key => $value) {
             if (is_array($value)) {
                 $cleaned[$key] = self::cleanArray($value);
-            }
-            else {
+            } else {
                 $cleaned[$key] = self::cleanValue($value);
             }
         }
@@ -30,7 +36,12 @@ class Sanitizer
     }
 
     /**
-     * Neteja un valor escalar
+     * Neteja un valor escalar (string)
+     *
+     * @param mixed $value Valor a netejar
+     * @return mixed Valor sanejat
+     *
+     * Exemple: " <b>text</b> " -> "text"
      */
     public static function cleanValue($value)
     {
@@ -38,14 +49,19 @@ class Sanitizer
             return $value;
         }
 
-        $value = trim($value);
-        $value = strip_tags($value);
+        $value = trim($value);      // Elimina espais al principi i final
+        $value = strip_tags($value); // Elimina tags HTML
 
         return $value;
     }
 
     /**
-     * Neteja un array (ex: tags[])
+     * Neteja un array de valors (ex: tags[])
+     *
+     * @param array $values Array de strings
+     * @return array Array sanejat amb valors no buits
+     *
+     * Exemple: [' php ', '', '<b>tag</b>'] -> ['php','tag']
      */
     public static function cleanArray(array $values): array
     {
@@ -67,6 +83,11 @@ class Sanitizer
 
     /**
      * Converteix un valor a enter segur
+     *
+     * @param mixed $value
+     * @return int|null Retorna enter o null si no és vàlid
+     *
+     * Exemple: "123" -> 123, "" -> null, "abc" -> null
      */
     public static function toInt($value): ?int
     {
@@ -79,6 +100,11 @@ class Sanitizer
 
     /**
      * Converteix un valor a float segur
+     *
+     * @param mixed $value
+     * @return float|null Retorna float o null si no és vàlid
+     *
+     * Exemple: "3.14" -> 3.14, "" -> null, "abc" -> null
      */
     public static function toFloat($value): ?float
     {

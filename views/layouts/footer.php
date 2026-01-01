@@ -1,5 +1,5 @@
         </main>
-        <!-- Footer -->
+        <!-- views/layouts/footer -->
         <footer class="footer">
             <small>
                 &copy; <?= date('Y') ?> Aplicació MVC. Tots els drets reservats.

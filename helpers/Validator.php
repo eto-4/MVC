@@ -1,17 +1,33 @@
 <?php
 
+/**
+ * Validator
+ *
+ * Classe encarregada de validar dades sanejades
+ * (normalment provinents de Sanitizer::clean($_POST)).
+ *
+ * Proporciona validació bàsica de camps, tipus, enums,
+ * tags i dates amb control de longitud.
+ */
 class Validator
 {
+    /**
+     * Valors permesos per enums
+     * @var array
+     */
     protected array $allowed = [
         'priority' => ['low', 'medium', 'high'],
         'state'    => ['pending', 'in-progress', 'blocked', 'completed']
     ];
      
+    /** @var array Dades sanejades */
     private array $data;
+
+    /** @var array Errors acumulats per camp */
     private array $errors = [];
 
     /**
-     * @param array $data Dades ja sanejades (Sanitizer)
+     * @param array $data Dades sanejades
      */
     public function __construct(array $data)
     {
@@ -19,7 +35,10 @@ class Validator
     }
 
     /**
-     * Afegeix un error a un camp
+     * Afegeix un error a un camp concret
+     *
+     * @param string $field Nom del camp
+     * @param string $message Missatge d'error
      */
     private function addError(string $field, string $message): void
     {
@@ -28,6 +47,9 @@ class Validator
 
     /**
      * Comprova que un camp existeixi i no estigui buit
+     *
+     * @param string $field
+     * @return self
      */
     public function required(string $field): self
     {
@@ -46,6 +68,11 @@ class Validator
 
     /**
      * Valida un string amb longitud mínima i màxima
+     *
+     * @param string $field
+     * @param int $min
+     * @param int|null $max
+     * @return self
      */
     public function string(string $field, int $min = 0, ?int $max = null): self
     {
@@ -59,7 +86,7 @@ class Validator
         if ($length < $min) {
             $this->addError(
                 $field, 
-                "Ha de tenir com a minim {$min} caràcters."
+                "Ha de tenir com a mínim {$min} caràcters."
             );
         }
 
@@ -73,6 +100,12 @@ class Validator
         return $this;
     }
 
+    /**
+     * Comprova que un camp sigui numèric
+     *
+     * @param string $field
+     * @return self
+     */
     public function numeric(string $field): self 
     {
         if (!isset($this->data[$field]) || $this->data[$field] === '') {
@@ -91,6 +124,10 @@ class Validator
 
     /**
      * Valida una data amb format estricte
+     *
+     * @param string $field
+     * @param string $format Format de date (per defecte: 'Y-m-d\TH:i')
+     * @return self
      */
     public function date(string $field, string $format = 'Y-m-d\TH:i'): self
     {
@@ -103,7 +140,7 @@ class Validator
         if (!$date || $date->format($format) !== $this->data[$field]) {
             $this->addError(
                 $field, 
-                "Format de date invàlid"
+                "Format de data invàlid"
             );
         }
 
@@ -111,7 +148,10 @@ class Validator
     }
 
     /**
-     * Valida enums (valors tancats)
+     * Valida que el valor estigui dins dels enums permesos
+     *
+     * @param string $field
+     * @return self
      */
     public function enum(string $field): self
     {
@@ -130,7 +170,10 @@ class Validator
     }
 
     /**
-     * Valida tags
+     * Valida un camp de tags (string separat per comes)
+     *
+     * @param string $field
+     * @return self
      */
     public function tags(string $field): self
     {
@@ -141,7 +184,7 @@ class Validator
         if (!is_string($this->data[$field])) {
             $this->addError(
                 $field,
-                "Format d'etiquetes invalid"
+                "Format d'etiquetes invàlid"
             );
             return $this;
         }
@@ -150,7 +193,9 @@ class Validator
     }
     
     /**
-     * Indica si la validació ha passat
+     * Indica si la validació ha passat sense errors
+     *
+     * @return bool
      */
     public function isValid(): bool
     {
@@ -159,6 +204,8 @@ class Validator
 
     /**
      * Retorna els errors per camp
+     *
+     * @return array
      */
     public function errors(): array
     {
